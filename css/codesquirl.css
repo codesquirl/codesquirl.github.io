@@ -1,0 +1,33 @@
+* {	
+	box-sizing: border-box;		
+}
+
+html, body {
+	margin: 0;
+	padding: 0;
+
+	background-color: #101112;
+	color: #eee;
+
+	font-family: Helvetica, Verdana, sans-serif;
+}
+
+.cs-fullscreen {
+	margin: 0;
+	padding: 0;
+	width: 100vw;
+	height: 100vh;
+}
+
+.cs-flex-center {
+	display: flex;
+	justify-content: center;
+	align-items: center;	
+}
+
+.cs-maintain {
+	max-width: 90%;
+	max-height: 90%;
+	min-width: 128px;
+	min-height: 128px;
+}
