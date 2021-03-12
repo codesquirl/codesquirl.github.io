@@ -56,7 +56,7 @@ h2 {
 	border-top: 1px solid var(--h-color);
 	border-bottom: 1px solid var(--h-color);
 }
-h3 {
+h3, h4 {
 	margin-bottom: 4px;
 }
 p {

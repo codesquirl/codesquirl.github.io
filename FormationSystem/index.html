@@ -15,8 +15,7 @@
 			<div class="cs-menuitem">
 				<label>UE4 Plugins</label>
 				<div class="cs-submenu">
-					<div class="cs-menuitem" data-href="../FormationSystem/"><label>Formation System</label></div>
-					<div class="cs-menuitem" data-href="../TargetingSystem/"><label>Targeting System</label></div>
+					<div class="cs-menuitem" data-href="/FormationSystem/"><label>Formation System</label></div>
 				</div>
 			</div>
 		</div>
@@ -26,12 +25,13 @@
 		<div id="toc" class="cs-toc cs-flex justify-start column">
 		</div>
 		<div class="cs-toc-content cs-pad-8">
-			<h1>Formation System</h1>
+			<h1>Formation System v2</h1>
 			<h2>Introduction</h2>
 			<p>
-				The Formation System allows you to easily add formations to your game. Make AI characters follow you in
-				formation, make groups move in formation, or use for any situation where you need characters to move
-				relative to each other such as cut-scenes or scripted events.
+				The Formation System allows you to easily add formations to your game. Make AI characters follow you in formation, make groups move in formation, or use for any situation where you need characters to move relative to each other such as cut-scenes or scripted events.
+			</p>
+			<p>
+				Version 2 of the Formation System has been completely rewritten to accomodate multiplayer and add additional requested features.
 			</p>
 			<h3>Example Project</h3>
 			<p>The example project shows some example ways in which the system can be used. This is by no means an exhaustive list. Let your imagination decide your limits.</p>
@@ -40,268 +40,68 @@
 			<p>An open source tool is provided to create custom formations, and export JSON that can be easily loaded by the Formation System.</p>
 			<p>Link: <a href="https://github.com/codesquirl/FormationsTool">Formations Tool</a></p>
 			<br />
+			<h3>Video Tutorials</h3>
+			<p>Additional video tutorials will be uploaded to <a href="https://www.youtube.com/channel/UCp12Bie5fVj0HBfvBGjSKbw">CodeSquirl YouTube</a> channel.</p>
 
 			<h2>Getting Started</h2>
 			<h3>Enable the Plugin</h3>
 			<p>1. In the Unreal Editor, click <strong>Edit > Plugins</strong></p>
-			<img src="img/editmenuplugins.png" style="margin-left: 16px; max-height: 300px" />
+			<p><img src="img/editmenuplugins.png" style="margin-left: 16px; max-height: 300px" /></p>
+			<br />
 			<p>2. Search for the Formation System plugin in the Plugins Browser.</p>
-			<img src="img/plugindialog.png" style="margin-left: 16px; max-width: 900px;" />
+			<p><img src="img/plugindialog.png" style="margin-left: 16px; max-width: 900px;" /></p>
+			<br />
 			<p>3. Check the <strong>Enabled</strong> box to enable the plugin.</p>
 
 			<h3>Add the C++ Module</h3>
-			<p>If you have a C++ project, add the FormationSystem module to your .build.cs file.</p>
+			<p>If you have a C++ project and want to interact with the Formation System from code, add the FormationSystem module to your <strong>.build.cs</strong> file.</p>
 			<pre><code class="cs">
 PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "HeadMountedDisplay", "FormationSystem" });
 PrivateIncludePathModuleNames.AddRange(new string[] { "FormationSystem" });
 			</code></pre>
+
 			<h3>Enjoy!</h3>
 			<p>Now you're ready to use the Formation System. Let your imagination run wild.</p>
 			<br />
 
-			<h2>Formation Member Component</h2>
-			<p>The Formation Member Component identifies a controller as able to be a formation member that can be added to a Formation Group.</p>
-			<p>Note: The Formation Member Component <strong>must</strong> be added to a class derived from AController.</p>
-			<h3>Add Formation Member Component (C++)</h3>
-			<p>1. Add a property to hold the Formation Member Component</p>
-			<pre><code class="cpp hpp">
-class FORMATIONSEXAMPLE_API AFormationsPlayerControllerBase : public APlayerController
-{
-	GENERATED_BODY()
+			<h2>QuickStart</h2>
+			<p>Using the Formation System is as simple as adding the Formation Component to any actors that you want to be able to add to formations, and adding the Formation Manager to your level. </p>
+			<dt>Formation Component</dt>
+			<dd>The Formation Component is main interface for interacting with the Formation System. It allows you to create, join and leave groups; add and remove members from groups; and switch the formation that a group uses.</dd>
+			<dt>Formation Manager</dt>
+			<dd>The Formation Manager keeps track of formations and formation groups and allows you to set options that affect how the Formation System works.</dd>
 
-	/** Formation Member Component */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Formation System", meta = (AllowPrivateAccess = "true"))
-	UFormationMemberComponent* FormationMemberComponent;
-				</code></pre>
+			<h3>Example Workflow</h3>
+			<p>Below is a short description of a typical workflow to create formations and get them into your game.</p>
+			<p>
+				<ul>
+					<li>Create and import formations</li>
+					<li>Add a Formation Manager to your level</li>
+					<li>Add the Formation Component to actors</li>
+					<li>Modify your AI to use their Desired values from the component</li>
+				</ul>
+			</p>
+			<p>For a more detailed explanations, see the relevent videos on the <a href="https://www.youtube.com/channel/UCp12Bie5fVj0HBfvBGjSKbw">CodeSquirl YouTube</a> channel.</p>
+			<h4>Create and Import Formations</h4>
+			<p>The easiest way to create formations is to use the <a href="https://github.com/codesquirl/FormationsTool">Formations Tool</a>, export them as JSON, and import them into a DataTable using the Unreal Editor.</p>
 
-			<p>2. Create the Formation Member Component as a subobject in the constructor.</p>
-			<pre><code class="cpp">
-AFormationsPlayerControllerBase::AFormationsPlayerControllerBase() : Super()
-{
-	FormationMemberComponent = CreateDefaultSubobject<UFormationMemberComponent>(FName("FormationMemberComponent"));
-}
-			</code></pre>
+			<h4>Add Formation Manager</h4>
+			<p>
+				Add the Formation Manager to any level that uses the Formation System. You can drag it from the 'Place Actors' window into your level.
+			</p>
+			<img src="img/qs_placeactors.png" style=" margin-left: 16px; max-height: 300px" />
 			<br />
+			<p>You can set options on Formation Manager instance. To automatically load formations, select a Formations data table from the Formation Manager instance.</p>
 
-			<h3>Add Formation Member Component (Blueprints)</h3>
-			<p>1. Create a Blueprint that derives from a Controller. (PlayerController or AIController)</p>
-			<img src="img/blueprintnew.png" style="display:inline-block; margin-left: 16px; max-height: 300px" />
-			<img src="img/blueprintpickclass.png" style="display:inline-block; margin-left: 16px; max-height: 300px" />
+			<h4>Add Formation Component</h4>
+			<p>Add the Formation Component to any actor you want to be a part of a formation group. Add the component in the same was as any other Actor Component.</p>
+			<img src="img/fs_addcomponent.png" style=" margin-left: 16px; max-height: 300px" />
 
-			<p>2. In the Blueprint Editor, click the 'Add Component' button, search, and select the Formation Member Component.</p>
-			<img src="img/blueprintaddcomponent.png" style=" margin-left: 16px; max-height: 300px" />
-
-			<p>3. Set component properties as desired.</p>
-			<img src="img/blueprintcomponentprops.png" style=" margin-left: 16px; max-height: 300px" />
-			<br />
-
-			<h3>Properties</h3>
-			<img src="img/fmc_props.png" style=" margin-left: 16px; max-height: 300px" />
-			<dt>DesiredLocation (Read Only)</dt>
-			<dd>The World Position where this formation member should be to be in formation.</dd>
-			<dt>DesiredFacing (Read Only)</dt>
-			<dd>A World Position that this formation member can use to look at, or set facing, to face the same direction as the leader.</dd>
-			<dt>Formation Group (Read Only)</dt>
-			<dd>Gets the Formation Group that this formation member belongs to. Can return an invalid object if not part of a group. Always use IsValid.</dd>
-			<dt>IsLeader (Read Only)</dt>
-			<dd>Whether or not this formation member is the group leader.</dd>
-			<dt>Position Update Enabled</dt>
-			<dd>Allows the component to automatically update the desired location and facing of this member in the current Formation Group.
-				If this property is set to false, then the DesiredPosition and DesiredFacing will not automatically update,
-				but can be updated manually by calling the <strong>UpdateDesiredPositionAndFacing</strong> function.</dd>
-			<dt>Position Update Interval</dt>
-			<dd>Sets the amount of time between automatic position updates.</dd>
-			<br/>
-
-			<h3>Methods</h3>
-			<dt>As Formation Group Member</dt>
-			<img src="img/fmc_asformationgroupmember.png" style=" margin-left: 16px; max-height: 300px" />
-			<dd>Returns a FFormationGroupMember structure that holds references to the Formation Member Component and the owning Controller.</dd>
-
-			<dt>Create Formation Group</dt>
-			<img src="img/fmc_createformationgroup.png" style=" margin-left: 16px; max-height: 300px" />
-			<dd>Create a new Formation Group with the current component as the formation leader.</dd>
-
-			<dt>Is In Formation</dt>
-			<img src="img/fmc_isinformation.png" style=" margin-left: 16px; max-height: 300px" />
-			<dd>Checks if the Formation Member is in a Formation Group and, if so, returns the Formation Group.</dd>
-
-			<dt>Leave Group</dt>
-			<img src="img/fmc_leavegroup.png" style=" margin-left: 16px; max-height: 300px" />
-			<dd>Remove the Formation Member from it's current Formation Group.</dd>
-
-			<dt>Set Group</dt>
-			<img src="img/fmc_setgroup.png" style=" margin-left: 16px; max-height: 300px" />
-			<dd>Sets the current Formation Group of the Formation Member. If the Formation Member is already part of a group,
-				it will be removed from it's existing group before being added to the new group.
-			</dd>
-			<br/>
-			<h3>Events</h3>
-			<dt>Notify Join Formation</dt>
-			<img src="img/fmc_notifyjoin.png" style=" margin-left: 16px; max-height: 300px" />
-			<dd>Fired when this Formation Member joins a Formation Group.</dd>
-
-			<dt>Notify Leave Formation</dt>
-			<img src="img/fmc_notifyleave.png" style=" margin-left: 16px; max-height: 300px" />
-			<dd>Fired when this Formation Member leaves a Formation Group.</dd>
-			<br />
-
-			<h2>Formation Subsystem</h2>
-			<p>The Formation Subsystem is a Game Instance Subsystem that manages available Formations and Formation Groups. </p>
-			<h3>Reference (C++)</h3>
-			<p>The Formation Subsystem can be retrieved in any place that can get a reference to the Game Instance using the static
-				templated method <strong>GetSubsystem</strong> on the <strong>UGameInstance</strong> class.</p>
-			<pre><code>
-UFormationSubsystem* FormationSubsystem = UGameInstance::GetSubsystem<UFormationSubsystem>(GetGameInstance());
-			</code></pre>
-			<p>You can also get the subsystem directly from the GameInstance</p>
-			<pre><code>
-UFormationSubsystem* FormationSubsystem = GetGameInstance()->GetSubsystem<UFormationSubsystem>();
-			</code></pre>
-
-			<h3>Reference (Blueprint)</h3>
-			<p>The Formation Subsystem can be retrieved in any place that can get a reference to the Game Instance.</p>
-			<img src="img/fs_referenceblueprint.png" style=" margin-left: 16px; max-height: 300px" />
-
-			<h3>Properties</h3>
-			<img src="img/fs_props.png" style=" margin-left: 16px; max-height: 300px" />
-			<dt>Default Formation Name (Read Only)</dt>
-			<dd>The name of the default formation used when Formation Groups are created.</dd>
-			<dt>Formation Groups</dt>
-			<dd>An array of the current Formation Groups.</dd>
-			<dt>Formations</dt>
-			<dd>A Map containing the current Formations keyed with the formation name.</dd>
-			<br/>
-
-			<h3>Methods</h3>
-			<dt>Load Formations</dt>
-			<img src="img/fs_loadformations.png" style=" margin-left: 16px; max-height: 300px" />
-			<dd>Load formations from a DataTable specified by an Asset Reference string.</dd>
-			<dt>Get Formation Group</dt>
-			<img src="img/fs_getformationgroup.png" style=" margin-left: 16px; max-height: 300px" />
-			<dd>Look up the Formation Group for the specified Formation Member.</dd>
-			<dt>Add Formation Group</dt>
-			<img src="img/fs_addformationgroup.png" style=" margin-left: 16px; max-height: 300px" />
-			<dd>Create a new Formation Group with the specified Leader.</dd>
-			<dt>Remove Formation Group</dt>
-			<img src="img/fs_removeformationgroup.png" style=" margin-left: 16px; max-height: 300px" />
-			<dd>Remove the specified Formation Group .</dd>
-
-			<dt>Get Formation Names</dt>
-			<img src="img/fs_getformationnames.png" style=" margin-left: 16px; max-height: 300px" />
-			<dd>Gets an array of all the Formation names.</dd>
-			<dt>Get Formation</dt>
-			<img src="img/fs_getformation.png" style=" margin-left: 16px; max-height: 300px" />
-			<dd>Gets a specific formation by name.</dd>
-			<dt>Get Next Formation</dt>
-			<img src="img/fs_getnextformation.png" style=" margin-left: 16px; max-height: 300px" />
-			<dd>Gets the next Formation after the Formation with the specified name. This function is cyclic, meaning that if it reaches
-				the end of the Formation map, it will cycle back to the beginning.</dd>
-			<dt>Get Next Formation Name</dt>
-			<img src="img/fs_getnextformationname.png" style=" margin-left: 16px; max-height: 300px" />
-			<dd>Gets the next Formation name after the Formation with the specified name. This function is cyclic, meaning that if it reaches
-				the end of the Formation map, it will cycle back to the beginning.</dd>
-			<dt>Get Previous Formation</dt>
-			<img src="img/fs_getprevformation.png" style=" margin-left: 16px; max-height: 300px" />
-			<dd>Gets the previous Formation before the Formation with the specified name. This function is cyclic, meaning that if it reaches
-				the beginning of the Formation map, it will cycle back to the end.</dd>
-			<dt>Get Previous Formation Name</dt>
-			<img src="img/fs_getprevformationname.png" style=" margin-left: 16px; max-height: 300px" />
-			<dd>Gets the previous Formation name before the Formation with the specified name. This function is cyclic, meaning that if it reaches
-				the beginning of the Formation map, it will cycle back to the end.</dd>
-			<br/>
-
-			<h2>Formation Group</h2>
-			<p>The Formation Group manages formation group members and the groups current formation.</p>
-			<p>A Formation Group has one Leader and many Followers. Any method that deals with a 'Follower' does not include the Leader.</p>
-
-			<h3>Methods</h3>
-			<dt>Add Follower</dt>
-			<dd>Add a Formation Member to the Formation Group.</dd>
-			<img src="img/fg_addfollower.png" style=" margin-left: 16px; max-height: 300px" />
-			<dt>Get Follower</dt>
-			<dd>Get the Formation Member at the specified index.</dd>
-			<img src="img/fg_getfollower.png" style=" margin-left: 16px; max-height: 300px" />
-			<dt>Get Follower Count</dt>
-			<dd>Get the number of Formation Members in this Formation Group.</dd>
-			<img src="img/fg_getfollowercount.png" style=" margin-left: 16px; max-height: 300px" />
-			<dt>Get Follower Index</dt>
-			<dd>Get the index of the specified Formation Member.</dd>
-			<img src="img/fg_getfollowerindex.png" style=" margin-left: 16px; max-height: 300px" />
-			<dt>Get Follower Relative Position</dt>
-			<dd>Get a position Vector, that is relative to the leader, for the specified Formation Member.</dd>
-			<img src="img/fg_getfollowerrelative.png" style=" margin-left: 16px; max-height: 300px" />
-			<dt>Get Follower World Position</dt>
-			<dd>Get a World Location Vector for the specified Formation Member.</dd>
-			<img src="img/fg_getfollowerworldpos.png" style=" margin-left: 16px; max-height: 300px" />
-			<dt>Get Followers</dt>
-			<dd>Get an array containing FormationGroupMember structures of all Formation Members.</dd>
-			<img src="img/fg_getfollowers.png" style=" margin-left: 16px; max-height: 300px" />
-			<dt>Get Formation</dt>
-			<dd>Get the current Formation used by this group.</dd>
-			<img src="img/fg_getformation.png" style=" margin-left: 16px; max-height: 300px" />
-			<dt>Get Leader</dt>
-			<dd>Get a Controller reference to the Leader of this Formation Group.</dd>
-			<img src="img/fg_getleader.png" style=" margin-left: 16px; max-height: 300px" />
-			<dt>Get Leader Pawn</dt>
-			<dd>Get a Pawn reference for the Leader of this Formation Group.</dd>
-			<img src="img/fg_getleaderpawn.png" style=" margin-left: 16px; max-height: 300px" />
-			<dt>Has Follow</dt>
-			<dd>Checks if the specified Formation Member is part of this Formation Group.</dd>
-			<img src="img/fg_hasfollower.png" style=" margin-left: 16px; max-height: 300px" />
-			<dt>Next Formation</dt>
-			<dd>Cycle the Formation Group's current formation to the next Formation in the Formation Subsystem.</dd>
-			<img src="img/fg_nextformation.png" style=" margin-left: 16px; max-height: 300px" />
-			<dt>Previous Formation</dt>
-			<dd>Cycle the Formation Group's current formation to the previous Formation in the Formation Subsystem.</dd>
-			<img src="img/fg_prevformation.png" style=" margin-left: 16px; max-height: 300px" />
-			<dt>Remove Follower</dt>
-			<dd>Remove the specified Formation Member from the Formation Group.</dd>
-			<img src="img/fg_removefollower.png" style=" margin-left: 16px; max-height: 300px" />
-			<dt>Remove Followers</dt>
-			<dd>Remove all Formation Members from the Formation Group.</dd>
-			<img src="img/fg_removefollowers.png" style=" margin-left: 16px; max-height: 300px" />
-			<dt>Remove Leader</dt>
-			<dd>Remove the current Leader from the Formation Group. A new Leader will be promoted from the Followers. If no Followers
-			remain, the Formation Group will be removed from the Formation Subsystem and destroyed.</dd>
-			<img src="img/fg_removeleader.png" style=" margin-left: 16px; max-height: 300px" />
-			<dt>Set Formation</dt>
-			<dd>Set the current Formation of the Formation Group.</dd>
-			<img src="img/fg_setformation.png" style=" margin-left: 16px; max-height: 300px" />
-			<dt>Set Leader</dt>
-			<dd>Set the Leader for this Formation Group. This replaces any existing Leader.</dd>
-			<img src="img/fg_setleader.png" style=" margin-left: 16px; max-height: 300px" />
-
-			<br/>
-			<h2>Formation</h2>
-			<p>The Formation stores a list of all available positions relative to the group leader. The first postition (index 0) should always be a ZeroVector representing the leader's position.</p>
-
-			<h3>Properties</h3>
-			<img src="img/f_props.png" style=" margin-left: 16px; max-height: 300px" />
-			<dt>Is Default</dt>
-			<dd>Get or Set whether or not this Formation is the default Formation.</dd>
-			<dt>Name</dt>
-			<dd>Get or Set the Formation Name</dd>
-			<dt>Positions</dt>
-			<dd>Get or Set an array of Vectors holding the relative positions in this Formation.</dd>
-			<br/>
-
-			<h3>Methods</h3>
-			<dt>Get Position</dt>
-			<dd>Gets the position Vector at the specified index.</dd>
-			<img src="img/f_getposition.png" style=" margin-left: 16px; max-height: 300px" />
-			<dt>Has Position</dt>
-			<dd>Checks if a position is defined for the given index.</dd>
-			<img src="img/f_hasposition.png" style=" margin-left: 16px; max-height: 300px" />
-			<dt>Is Empty</dt>
-			<dd>Checks if there are no positions defined.</dd>
-			<img src="img/f_isempty.png" style=" margin-left: 16px; max-height: 300px" />
-			<br/>
-
-			<h2>Formation Group Member Struct</h2>
-			<img src="img/fgm_struct.png" style="display: block; margin-left: 16px; max-height: 300px" />
-			<p>The Formation Group Member structure just holds references to the <strong>Controller</strong> and <strong>Formation Member Component</strong>
-				for ease of access in certain places.</p>
+			<h4>Modifying AI</h4>
+			<p>The Formation Component exposes two variables that can be used by AI to determine where they are supposed to be (DesiredLocation), and which way they're supposed to be facing (DesiredFacing) to be considered "in formation".</p>
+			<img src="img/qs_aiset.png" style=" margin-left: 16px; max-height: 300px" />
+			<p>You can periodically push these into your AI blackboard and use standard tasks such as MoveTo and SetFacing to use them. This is probably the least well defined part of this process because it is entirely up to you how your AI uses this information.</p>
+			<p>A simple AI is provided in the <a href="https://github.com/codesquirl/FormationSystemExample">Example Project</a> to illustrate how to use this.</p>
 			<br/>
 		</div>
 	</div>
