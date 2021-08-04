@@ -103,6 +103,28 @@ PrivateIncludePathModuleNames.AddRange(new string[] { "FormationSystem" });
 			<p>You can periodically push these into your AI blackboard and use standard tasks such as MoveTo and SetFacing to use them. This is probably the least well defined part of this process because it is entirely up to you how your AI uses this information.</p>
 			<p>A simple AI is provided in the <a href="https://github.com/codesquirl/FormationSystemExample">Example Project</a> to illustrate how to use this.</p>
 			<br/>
+
+			<h2>Additional Info</h2>
+			<h3>Subclassing FormationComponent</h3>
+			<p>You may want to subclass the Formation Component to keep your code neat and in one place, or for whatever other reason. At the moment, the Formation Component cannot be subclassed directly from Blueprints. You CAN work around this by creating your C++ class that is able to be subclassed from Blueprints. </p>
+			<p>Example:</p>
+			<ul>
+				<li>Create a new C++ Class
+					<img src="img/fc_subclass_cpp.png" style="display: block; margin: 4px 16px; max-height: 300px" /></li>
+				<li>Select Formation Component as parent
+					<img src="img/fc_subclass_select.png" style="display: block; margin: 4px 16px; max-height: 300px" /></li>
+				<li>Name your Component
+					<img src="img/fc_subclass_name.png" style="display: block; margin: 4px 16px; max-height: 300px" /></li>
+				<li>In your code editor, open the .h file of your component
+					<img src="img/fc_subclass_open.png" style="display: block; margin: 4px 16px; max-height: 300px" /></li>
+				<li>Add the Blueprintable specifier to the UCLASS definition
+					<img src="img/fc_subclass_edit.png" style="display: block; margin: 4px 16px; max-height: 300px" /></li>
+				<li>Save, and Build your project. You may need to restart UE4 Editor now.</li>
+				<li>Back in the Editor, create a new Blueprint Class and select your new class as the Parent.
+					<img src="img/fc_subclass_bp.png" style="display: block; margin: 4px 16px; max-height: 300px" /></li>				
+			</ul>
+			<p>You can now use your new Blueprint component on your actors.
+
 		</div>
 	</div>
 	<footer>
