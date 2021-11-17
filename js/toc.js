@@ -18,7 +18,7 @@ const TableOfContents = function() {
                 toc.addSection(tag);
             } else if (tag.tagName === 'H3') {
                 toc.addItem(tag);
-            } else if (tag.tagName === 'DT') {
+            } else if (tag.tagName === 'DT' || tag.tagName === 'H4') {
                 toc.addBit(tag);
             }
         }
@@ -40,7 +40,9 @@ const TableOfContents = function() {
     };
 
     this.addBit = function(tag) {
-        toc.addRow(tag, 'cs-toc-bit');
+        if (!tag.hasAttribute("toc-ignore")) {
+            toc.addRow(tag, 'cs-toc-bit');
+        }
     }
     this.addItem = function(tag) {
         toc.addRow(tag, 'cs-toc-item');

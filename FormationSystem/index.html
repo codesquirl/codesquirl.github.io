@@ -99,9 +99,9 @@ PrivateIncludePathModuleNames.AddRange(new string[] { "FormationSystem" });
 
 			<h4>Modifying AI</h4>
 			<p>The Formation Component exposes two variables that can be used by AI to determine where they are supposed to be (DesiredLocation), and which way they're supposed to be facing (DesiredFacing) to be considered "in formation".</p>
-			<img src="img/qs_aiset.png" style=" margin-left: 16px; max-height: 300px" />
 			<p>You can periodically push these into your AI blackboard and use standard tasks such as MoveTo and SetFacing to use them. This is probably the least well defined part of this process because it is entirely up to you how your AI uses this information.</p>
-			<p>A simple AI is provided in the <a href="https://github.com/codesquirl/FormationSystemExample">Example Project</a> to illustrate how to use this.</p>
+			<img src="img/qs_aiset.png" style=" margin-left: 16px; max-height: 300px" />
+			<p class="cs-pad-8">A simple AI is provided in the <a href="https://github.com/codesquirl/FormationSystemExample">Example Project</a> to illustrate how to use this.</p>
 			<br/>
 
 			<h2>Additional Info</h2>
@@ -121,10 +121,201 @@ PrivateIncludePathModuleNames.AddRange(new string[] { "FormationSystem" });
 					<img src="img/fc_subclass_edit.png" style="display: block; margin: 4px 16px; max-height: 300px" /></li>
 				<li>Save, and Build your project. You may need to restart UE4 Editor now.</li>
 				<li>Back in the Editor, create a new Blueprint Class and select your new class as the Parent.
-					<img src="img/fc_subclass_bp.png" style="display: block; margin: 4px 16px; max-height: 300px" /></li>				
+					<img src="img/fc_subclass_bp.png" style="display: block; margin: 4px 16px; max-height: 300px" /></li>
 			</ul>
 			<p>You can now use your new Blueprint component on your actors.
 
+			<h2>Class Reference</h2>
+			<h3>Formation System Statics</h3>
+			<p>Contains static helper functions to get Formation System objects.</p>
+			<img src="img/ref/fs_statics.png" style=" margin-left: 16px; max-height: 300px" />
+			<dt toc-ignore>Get Formation Manager</dt>
+			<dd>Returns the Formation Manager in the current world context.</dd>
+			<dt toc-ignore>Get Formation Component</dt>
+			<dd>Returns the Formation Component for the specified other Actor.</dd>
+
+			<h3>Formation Component</h3>
+			<p>The Formation Component is an Actor Component that can be put on any Actor that needs to be part of a group. It is the interface of how Actors
+				interact with the Formation System.</p>
+			<h4>Properties</h4>
+			<img src="img/ref/fc_vars.png" style=" margin-left: 16px; max-height: 300px" />
+			<dt toc-ignore>Desired Location</dt>
+			<dd>A Vector in world-space that represents where an Actor should move to.</dd>
+			<dt toc-ignore>Desired Facing</dt>
+			<dd>A Vector in world-space that represents the direction that an Actor should face. This can, for example, be passed to the "Rotate to Face BB Entry" behaviour tree task.</dd>
+			<dt toc-ignore>Member State</dt>
+			<dd>The current member state of the Actor within a group. (None, Member or Leader)</dd>
+			<dt toc-ignore>Formation Group</dt>
+			<dd>The current Formation Group that the Actor is a part of.</dd>
+
+			<h4>Methods</h4>
+			<img src="img/ref/fc_accessors.png" style=" margin-left: 16px; max-height: 300px" />
+			<dt toc-ignore>Is In Formation</dt>
+			<dd>Returns whether or not this Actor is in a Formation Group or not.</dd>
+			<dt toc-ignore>Is Leader</dt>
+			<dd>Returns whether or not this Actor is the Leader of their Formation Group.</dd>
+
+			<img src="img/ref/fc_members.png" style=" margin-left: 16px; max-height: 300px" />
+			<dt toc-ignore>(Server) Join Formation Group</dt>
+			<dd>Adds the Actor to the specified Formation Group.</dd>
+			<dt toc-ignore>(Server) Leave Formation Group</dt>
+			<dd>Removes the Actor from their Formation Group.</dd>
+
+			<img src="img/ref/fc_groupman.png" style=" margin-left: 16px; max-height: 300px" />
+			<dt toc-ignore>(Server) Create Formation Group</dt>
+			<dd>Creates a new Formation Group and sets this Actor as the Leader.</dd>
+			<dt toc-ignore>Add Formation Group Member *</dt>
+			<dd>Adds the specified Actor to this Actors Formation Group.</dd>
+			<dt toc-ignore>Remove Formation Group Member *</dt>
+			<dd>Removes the specified Actor from this Actors Formation Group.</dd>
+			<dt toc-ignore>(Server) Set Formation Spread *</dt>
+			<dd>Sets the spread of this Actors Formation Group. The spread is a multiplier of the spacing between Formation positions.</dd>
+			<dt toc-ignore>(Server) Set Formation *</dt>
+			<dd>Set the current Formation of this Actors Formation Group.</dd>
+			<dt toc-ignore>Next Formation *</dt>
+			<dd>Cycle the Actors Formation Groups current formation to the next Formation in the Formation list defined on the Formation Manager.</dd>
+			<dt toc-ignore>Previous Formation *</dt>
+			<dd>Cycle the Actors Formation Groups current formation to the previous Formation in the Formation list defined on the Formation Manager.</dd>
+
+			<p>* <sub>These methods will only work for group leaders.</sub></p>
+
+			<h4>Events</h4>
+			<img src="img/ref/fc_events.png" style=" margin-left: 16px; max-height: 300px" />
+			<dt toc-ignore>On Formation Group Joined</dt>
+			<dd>Fired when the Actor joins a Formation Group</dd>
+			<dt toc-ignore>On Formation Group Change</dt>
+			<dd>Fired when the Formation Group changes in any way - members joining or leaving, formation or spread changing, etc.</dd>
+			<dt toc-ignore>On Formation Group Left</dt>
+			<dd>Fired when the Actor leaves a Formation Group</dd>
+
+			<h3>Formation Group</h3>
+			<p>A Formation Group handles calculation world-space positions for the group, and updating Formation Components.</p>
+			<h4>Properties</h4>
+			<img src="img/ref/fg_vars.png" style=" margin-left: 16px; max-height: 300px" />
+			<dt toc-ignore>ID</dt>
+			<dd>A unique ID for this Group. This is assigned on group creation.</dd>
+			<dt toc-ignore>Formation Spread</dt>
+			<dd>The current spread of the group. This is a multiplier of the space between formation positions in the group. </dd>
+			<dt toc-ignore>Update Interval</dt>
+			<dd>This is the time is seconds between formation position updates.</dd>
+			<dt toc-ignore>IsPinned</dt>
+			<dd>Whether or not this group is pinned to a specific location.</dd>
+			<dt toc-ignore>Formation Origin</dt>
+			<dd>This is the position of the Formation Group.</dd>
+			<dt toc-ignore>Formation Forward Vector</dt>
+			<dd>The current forward vector of the Formation Group.</dd>
+			<dt toc-ignore>Formation Rotation</dt>
+			<dd>The current rotation of the Formation Group.</dd>
+			<dt toc-ignore>Formation Name</dt>
+			<dd>The current formation name of the Formation used by this group.</dd>
+			<dt toc-ignore>Leader</dt>
+			<dd>The Formation Component of the leader of this group.</dd>
+			<dt toc-ignore>Members</dt>
+			<dd>An array of the current members of this group.</dd>
+
+			<h4>Methods</h4>
+			<dt toc-ignore>Get ID</dt>
+			<dd>The the unique ID of this group.</dd>
+			<dt toc-ignore>Update Members</dt>
+			<dd>Force an update of the formation positions for this group. This happens on Tick at 'UpdateInterval' intervals,
+				but is provided if you need to disable tick for some reason, but still update formation positions.</dd>
+			<dt toc-ignore>Transform Formation Positions</dt>
+			<dd>Transforms Formation positions from relative coordinates to world coordinates as part of the Member update.</dd>
+			<dt toc-ignore>Fetch Formation Positions</dt>
+			<dd>Forces an update of the Formation position cache from the Formation Manager. You may need to do this if you manually change Formation positions at runtime.</dd>
+			<dt toc-ignore>Get Formation Name</dt>
+			<dd>Get the name of the current Formation.</dd>
+			<dt toc-ignore>Has Member</dt>
+			<dd>Returns a bool of whether or not an Actor is a member of this group.</dd>
+			<dt toc-ignore>Set Formation Name</dt>
+			<dd>Sets the current group Formation by name.</dd>
+			<dt toc-ignore>Set Formation Spread</dt>
+			<dd>The the group Formation Spread - a multiplier of the space between Formation positions.</dd>
+			<dt toc-ignore>Pin</dt>
+			<dd>Pins a group to a specific location, facing in a specific direction. A pinned group does not update to the Leader's location and will remain at
+				the pinned position until un-pinned. </dd>
+			<dt toc-ignore>UnPin</dt>
+			<dd>Un-pin a group. Once a group is un-pinned, it will align the Formation to the group leader, if there is one.</dd>
+			<dt toc-ignore>Set Leader</dt>
+			<dd>Sets the Leader of the group. If the Leader is not already a part of the group, they will be added to the group.</dd>
+			<dt toc-ignore>Add Member</dt>
+			<dd>Adds a new member to the group using their Actor. The actor must have a Formation Component.</dd>
+			<dt toc-ignore>Add Member Component</dt>
+			<dd>Adds a new member to the group using their Formation Component.</dd>
+			<dt toc-ignore>Remove Member</dt>
+			<dd>Remove a specific member from the group.</dd>
+			<dt toc-ignore>Remove Member Component</dt>
+			<dd>Remove a specific member from the group using their Formation Component.</dd>
+
+			<h3>Formation Manager</h3>
+			<p>The Formation Manager is the Authority of the Formation System and is in charge of loading and managing Formations, and creating and managing Formation Groups.</p>
+			<h4>Properties</h4>
+			<img src="img/ref/fm_vars.png" style=" margin-left: 16px; max-height: 300px" />
+			<dt toc-ignore>Default Formation</dt>
+			<dd>The name of the default Formation. New groups will use this Formation when created.</dd>
+			<dt toc-ignore>Formation Names</dt>
+			<dd>An array of all defined Formation names.</dd>
+			<dt toc-ignore>Formations</dt>
+			<dd>An array of all defined Formations.</dd>
+			<dt toc-ignore>Formation Groups</dt>
+			<dd>An array of all Formation Groups.</dd>
+			<dt toc-ignore>Position Selection Mode</dt>
+			<dd>The mode that group members will use to select their positions.</dd>
+			<br />
+			<strong>Position Selection Modes</strong>
+			<ul>
+				<li><strong>Ordinal</strong> - Members will use the same position as their index in the group. Eg. Member #1 will use Position #1.</li>
+				<li><strong>Closest</strong> - Members will pick the closest unclaimed position. Positions are claimed by members in ordinal order.</li>
+				<li><strong>FillClosest</strong> - Positions are assigned to the closest member who has not already been assigned a position. </li>
+			</ul>
+			<h4>Methods</h4>
+			<dt toc-ignore>Load</dt>
+			<dd>Load formations from a DataTable, specified by a content reference path. Example: TEXT("DataTable'/Game/FormationsExample/Data/Formations/FormationData.FormationData'")</dd>
+			<dt toc-ignore>Load Formation Data</dt>
+			<dd>Load formations from the specified DataTable.</dd>
+			<dt toc-ignore>Set Default Formation</dt>
+			<dd>Sets the default Formation that new groups will use when they are created.</dd>
+			<dt toc-ignore>Get Next Formation Name</dt>
+			<dd>Given a Formation name, gets the next Formation in the Formations list.</dd>
+			<dt toc-ignore>Get Previous Formation Name</dt>
+			<dd>Given a Formation name, gets the previous Formation in the Formations list.</dd>
+			<dt toc-ignore>Has Formation</dt>
+			<dd>Checks whether a Formation with the specified name exists.</dd>
+			<dt toc-ignore>Create Formation</dt>
+			<dd>Creates a new Formation with the given name.</dd>
+			<dt toc-ignore>Get Formation Positions</dt>
+			<dd>Returns the Formation positions for a specific Formation.</dd>
+			<dt toc-ignore>Set Formation Positions</dt>
+			<dd>Sets the Formation positions for a specific Formation.</dd>
+			<dt toc-ignore>New Formation Group</dt>
+			<dd>Creates a new empty Formation Group, pinned to the location and rotation represented by the specified transform.</dd>
+			<dt toc-ignore>Get Formation Group For Member</dt>
+			<dd>Returns the Formation Group for a specific Formation Component. If the Formation Component is not in a group, returns a null reference.</dd>
+			<dt toc-ignore>Get Formation Group</dt>
+			<dd>Returns the Formation Group with a specific ID.</dd>
+			<dt toc-ignore>Create Formation Group</dt>
+			<dd>Creates a new Formation Group and sets its Leader to the specified leader.</dd>
+			<dt toc-ignore>Add Formation Group Member</dt>
+			<dd>Adds a Formation Component to the specified group.</dd>
+			<dt toc-ignore>Remove Formation Group Member</dt>
+			<dd>Removes a Formation Component from the specified group.</dd>
+			<dt toc-ignore>Pin Formation Group</dt>
+			<dd>Pins a Formation Group to the location and rotation represented by the specified Transform.</dd>
+			<dt toc-ignore>UnPin Formation Group</dt>
+			<dd>UnPins a Formation Group.</dd>
+			<dt toc-ignore>Disband Formation Group</dt>
+			<dd>Disbands a Formation Group by removing all of its members, and removes the Formation Group.</dd>
+
+			<h4>Events</h4>
+			<dt toc-ignore>Formations Changed</dt>
+			<dd>Broadcasts whenever the Formation data changes</dd>
+			<dt toc-ignore>Formation Groups Changed</dt>
+			<dd>Broadcasts whenever the Formation Group data changes</dd>
+			<dt toc-ignore>Formation Manager Ready</dt>
+			<dd>Broadcasts when the Formation Manager has finished initialization, after BeginPlay, and is ready to be used.</dd>
+
+			<h2>Support</h2>
+			<p>If you are having any issues with the plugin, or have any specific questions you can email <strong>codesquirl</strong> AT <strong>gmail.com</strong>. </p>
 		</div>
 	</div>
 	<footer>
